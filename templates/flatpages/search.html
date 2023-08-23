@@ -18,6 +18,14 @@ Posts
         <input type="submit" value="Найти" class="btn btn-success"/>
         <a class="btn btn-secondary" role="button" href="{{ request.path }}">Сбросить фильтры</a>
     </form>
+<hr>
+
+    {# Теперь будем проверять не request.user.is_authenticated, а конкретные права #}
+    {% if perms.simpleapp.add_post %}
+    <a class="btn btn-primary btn-sm" href="{% url 'news_create' %}">Добавить пост</a>
+    {% endif %}
+
+    {% if posts %}
 
 <div class="col-lg-12 text-center">
     <h1>Все посты</h1>
@@ -40,9 +48,16 @@ Posts
             <td>{{ post.dateCreation }}</td>
             <td>{{ post.text | truncatewords:20 | censor}}</td>
             <td><a class="btn btn-primary btn-sm" href="/news/{{ post.pk }}">Читать</a></td>
-            <td><a class="btn btn-primary btn-sm" href="/news/{{ post.pk }}/edit/">Редактировать</a></td>
-            <td><a class="btn btn-primary btn-sm" href="/news/{{ post.pk }}/delete/">Удалить</a></td>
-        </tr>
+
+
+                    {# А здесь доступ для каждой ссылки теперь будем проверять отдельно #}
+                    {% if perms.simpleapp.change_post %}
+                   <td> <a class="btn btn-primary btn-sm" href="{% url 'news_update' pk=post.id %}">Изменить</a></td>
+                    {% endif %}
+                    {% if perms.simpleapp.delete_post %}
+                    <td> <a class="btn btn-primary btn-sm" href="{% url 'news_delete' post.id %}">Удалить</a></td>
+                    {% endif %}
+
         {% endfor %}
         </tbody>
     </table>
@@ -75,5 +90,5 @@ Posts
         </ul>
     </nav>
 </div>
-
+{% endif %}
 {% endblock content %}

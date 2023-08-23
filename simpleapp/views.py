@@ -1,4 +1,4 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
@@ -44,25 +44,37 @@ class SearchPosts(ListView):
         context['search_filter'] = self.filterset
         return context
 
-class PostCreate(CreateView):
-    template_name = 'flatpages/news_create.html'
+class PostCreate( LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    permission_required = ('simpleapp.add_post',)
     form_class = AddPostForm
+    model = Post
+    raise_exception = True
+    template_name = 'flatpages/news_create.html'
+
+    def form_valid(self, form):
+        post = form.save(commit=False)
+        post.type = 'NW'
+        post.author = self.request.user.author
+        post.save()
+        return super().form_valid(form)
 
 
-class PostUpdate(LoginRequiredMixin, UpdateView):
-    template_name = 'flatpages/news_create.html'
+
+
+class PostUpdate(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
+    permission_required = ('simpleapp.change_post',)
     form_class = AddPostForm
+    model = Post
+    template_name = 'flatpages/news_create.html'
+
 
     def get_object(self, **kwargs):
         id = self.kwargs.get('pk')
         return Post.objects.get(pk=id)
 
 
-class PostDelete(DeleteView):
-    # template_name = 'flatpages/news_delete.html'
-    # queryset = Post.objects.all()
-    # success_url = reverse_lazy('news')
-
+class PostDelete(PermissionRequiredMixin, LoginRequiredMixin, DeleteView):
+    permission_required = ('simpleapp.delete_post',)
     model = Post
     template_name = 'flatpages/news_delete.html'
     success_url = reverse_lazy('posts_list')
