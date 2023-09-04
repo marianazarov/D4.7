@@ -20,7 +20,7 @@ class PostFilter(django_filters.FilterSet):
         widget=django.forms.TextInput(
             attrs={'type': 'text', 'class': "form-control", 'placeholder': "Ведите текст..."}))
 
-    type = django_filters.ChoiceFilter(field_name='categoryType', empty_label='все', label='Категория',
+    type = django_filters.ChoiceFilter(field_name='categoryType', empty_label='все', label='Тип',
                                        choices=Post.CATEGORY_CHOICES)
 
     date_time__gt = django_filters.DateFilter(
