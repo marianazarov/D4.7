@@ -29,9 +29,8 @@ INSTALLED_APPS = [
 
     'django.contrib.sites',
     'django.contrib.flatpages',
-    'simpleapp',
+    'simpleapp.apps.SimpleappConfig',
     'django_filters',
-    'accounts',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -134,25 +133,25 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_UNIQUE_EMAIL = True
-ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_EMAIL_VERIFICATION = 'none'
-SITE_URL = 'http://http://127.0.0.1:8000'
-
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
 EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_PORT = 465
-EMAIL_HOST_USER ="marysanazarova@yandex.ru"
+EMAIL_HOST_USER = "marysanazarova"
 EMAIL_HOST_PASSWORD = "lwdumenkslwewcyd"
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
 
 DEFAULT_FROM_EMAIL = "marysanazarova@yandex.ru"
 
-APSCHEDULER_DATETIME_FORMAT = 'N j, Y, f:s a'
-APSCHEDULER_RUN_NOW_TIMEOUT = 25
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_FORMS = {"signup": "accounts.forms.CustomSignupForm"}
+
+SITE_URL = 'http://127.0.0.1:8000'
 
 STATICFILES_DIRS = [
     BASE_DIR / "static"

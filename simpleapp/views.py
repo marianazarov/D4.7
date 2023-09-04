@@ -63,8 +63,6 @@ class PostCreate( LoginRequiredMixin, PermissionRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-
-
 class PostUpdate(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
     permission_required = ('simpleapp.change_post',)
     form_class = AddPostForm
@@ -91,13 +89,13 @@ class PostDelete(PermissionRequiredMixin, LoginRequiredMixin, DeleteView):
 
 
 class CategoryListView(ListView):
-    template_name = 'category_list.html'
     model = Post
+    template_name = 'flatpages/category_list.html'
     context_object_name = 'category_news_list'
 
     def get_queryset(self):
-        self.category = get_object_or_404 (Category, id=self.kwargs['pk'])
-        queryset = Post.objects.filter(postTopic=self.postTopic).order_by('-dateCreation')
+        self.category = get_object_or_404(Category, id=self.kwargs['pk'])
+        queryset = Post.objects.filter(postCategory=self.category).order_by('-dateCreation')
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -105,7 +103,6 @@ class CategoryListView(ListView):
         context['is_not_subscriber'] = self.request.user not in self.category.subscribers.all()
         context['category'] = self.category
         return context
-
 
 @login_required
 @csrf_protect

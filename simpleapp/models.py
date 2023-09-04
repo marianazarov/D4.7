@@ -26,7 +26,6 @@ class Category(models.Model):
     subscribers = models.ManyToManyField(User, related_name='categories')
 
 
-
 class Post(models.Model):
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
 

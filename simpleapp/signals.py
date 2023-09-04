@@ -7,12 +7,11 @@ from .models import PostCategory
 
 
 def send_notifications(preview, pk, title, subscribers):
-    html_context=render_to_string(
+    html_content = render_to_string(
         'flatpages/post_created_email.html',
-        {
-            'text': preview,
-            'Link': f'{settings.SITE_URL}/news/{pk}'
-        }
+        {'text': preview,
+         'link': f'{settings.SITE_URL}/news/{pk}',
+         }
     )
 
     msg = EmailMultiAlternatives(
