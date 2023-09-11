@@ -151,6 +151,13 @@ ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 ACCOUNT_FORMS = {"signup": "accounts.forms.CustomSignupForm"}
 
+
+CELERY_BROKER_URL = 'redis://default:53UUqozHD2iNDhnUfrgHaYj3uBIJxhel@redis-19544.c17.us-east-1-4.ec2.cloud.redislabs.com:19544'
+CELERY_RESULT_BACKEND = 'redis://default:53UUqozHD2iNDhnUfrgHaYj3uBIJxhel@redis-19544.c17.us-east-1-4.ec2.cloud.redislabs.com:19544'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+
 SITE_URL = 'http://127.0.0.1:8000'
 
 STATICFILES_DIRS = [
