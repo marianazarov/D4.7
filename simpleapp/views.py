@@ -2,6 +2,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
+from django.core.cache import cache
+
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_protect
@@ -10,6 +12,7 @@ from .filters import PostFilter
 from .forms import AddPostForm
 
 from .models import Post, Category
+
 
 
 class PostsList(ListView):
@@ -26,6 +29,14 @@ class PostDetail(DetailView):
     model = Post
     template_name = 'flatpages/post.html'
     context_object_name = 'post'
+
+    def get_object(self, *args, **kwargs):  # переопределяем метод получения объекта
+        obj = cache.get(f'news-{self.kwargs["pk"]}', None)
+
+        if not obj:
+            obj = super().get_object(queryset=self.queryset)
+            cache.set(f'news-{self.kwargs["pk"]}', obj)
+            return obj
 
 
 class SearchPosts(ListView):

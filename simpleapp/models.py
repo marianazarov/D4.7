@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 from django.db.models import Sum
 from django.urls import reverse
 
+from django.core.cache import cache
+
 
 class Author(models.Model):
     authorUser = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -53,8 +55,15 @@ class Post(models.Model):
     def preview(self):
         return self.text[0:123] + '...'
 
-    def get_absolute_url(self):
-        return reverse('news_detail', kwargs={'pk': self.pk})
+    # def get_absolute_url(self):
+    #     return reverse('news_detail', kwargs={'pk': self.pk})
+
+    def get_absolute_url(self):  # добавим абсолютный путь, чтобы после создания нас перебрасывало на страницу с товаром
+        return f'/news/{self.id}'
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)  # сначала вызываем метод родителя, чтобы объект сохранился
+        cache.delete(f'news-{self.pk}')
 
 
 class PostCategory(models.Model):
